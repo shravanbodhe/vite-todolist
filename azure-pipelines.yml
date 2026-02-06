@@ -2,16 +2,14 @@ trigger:
 - main
 
 pool:
-  vmImage: ubuntu-latest
+  name: Shravan   # <-- your agent pool name
 
 steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '18.x'
-  displayName: Install Node
+- script: node -v
+  displayName: check node
 
 - script: npm install
-  displayName: Install dependencies
+  displayName: install dependencies
 
 - script: npm run build
-  displayName: Build Vite React app
+  displayName: build react app
