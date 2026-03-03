@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 
 import './App.css';
 
@@ -35,21 +36,43 @@ function App() {
   };
 
   return (
-    <>
-      Add To DO Item here :{' '}
-      <input
-        type="text"
-        value={todoItem}
-        onChange={(e) => {
-          const todoItemValue = e.target.value;
-          console.log(' todo Item - ', todoItemValue);
-          setToDOItem(todoItemValue);
-        }}
-      />
-      <input type="Button" value="Add" onClick={handleAdd} />
-      <div>
-        <br />
-        TO Do List
+    <main>
+      <Helmet>
+        <title>Todo List App | Organize Daily Tasks</title>
+        <meta
+          name="description"
+          content="Simple and fast Todo List app to add, edit, and delete daily tasks. Stay productive with an easy task manager built with React."
+        />
+        <meta
+          property="og:title"
+          content="Todo List App | Organize Daily Tasks"
+        />
+        <meta
+          property="og:description"
+          content="Simple and fast Todo List app to add, edit, and delete daily tasks."
+        />
+      </Helmet>
+
+      <h1>Todo List App</h1>
+
+      <section aria-label="Add todo section">
+        <label htmlFor="todo-input">Add todo item</label>{' '}
+        <input
+          id="todo-input"
+          type="text"
+          value={todoItem}
+          onChange={(e) => {
+            const todoItemValue = e.target.value;
+            setToDOItem(todoItemValue);
+          }}
+        />
+        <button type="button" onClick={handleAdd}>
+          Add
+        </button>
+      </section>
+
+      <section aria-label="Todo list section">
+        <h2>Todo Items</h2>
         <ul>
           {toDoList.map((item) => {
             return (
@@ -57,6 +80,7 @@ function App() {
                 {item.isEdit ? (
                   <input
                     type="text"
+                    aria-label={`Edit ${item.text}`}
                     value={item.text}
                     onChange={(e) => {
                       handleChange(item.id, e.target.value);
@@ -65,27 +89,21 @@ function App() {
                 ) : (
                   item.text
                 )}{' '}
-                <input
-                  type="button"
-                  value="Delete"
-                  onClick={() => handleDelete(item.id)}
-                />{' '}
-                <input
-                  type="button"
-                  value="Edit"
-                  onClick={() => handleEdit(item.id)}
-                />{' '}
-                <input
-                  type="button"
-                  value="Save"
-                  onClick={() => handleSave(item.id)}
-                />
+                <button type="button" onClick={() => handleDelete(item.id)}>
+                  Delete
+                </button>{' '}
+                <button type="button" onClick={() => handleEdit(item.id)}>
+                  Edit
+                </button>{' '}
+                <button type="button" onClick={() => handleSave(item.id)}>
+                  Save
+                </button>
               </li>
             );
           })}
         </ul>
-      </div>
-    </>
+      </section>
+    </main>
   );
 }
 

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://proud-pebble-067e3a310.4.azurestaticapps.net/sitemap.xml
