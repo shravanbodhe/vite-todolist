@@ -17,8 +17,8 @@ If you are developing a production application, you can enable stricter rules by
 
 ```js
 // eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+import reactX from 'eslint-plugin-react-x';
+import reactDom from 'eslint-plugin-react-dom';
 
 export default defineConfig([
   globalIgnores(['dist']),
@@ -30,5 +30,5 @@ export default defineConfig([
       reactDom.configs.recommended,
     ],
   },
-])
+]);
 ```

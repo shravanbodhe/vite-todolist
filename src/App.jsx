@@ -8,7 +8,7 @@ function App() {
 
   const handleAdd = () => {
     if (!todoItem.trim()) return;
-    
+
     setToDOList([
       ...toDoList,
       { id: Date.now(), text: todoItem, isEdit: false },

@@ -251,7 +251,9 @@ describe('App Component', () => {
       await user.type(input, 'Test task');
       await user.click(addButton);
 
-      expect(screen.getByRole('button', { name: /delete/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /delete/i })
+      ).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /save/i })).toBeInTheDocument();
     });
