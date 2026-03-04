@@ -1,0 +1,47 @@
+# Workflow चे नाव (GitHub Actions UI मध्ये दिसते)
+name: Post Deploy Load Test (k6)
+
+# Workflow कधी चालेल ते define करते
+on:
+  # दुसरा workflow पूर्ण झाल्यावर हा workflow चालवा
+  workflow_run:
+    # फक्त या नावाच्या workflow नंतर trigger करा
+    workflows: ['Azure Static Web Apps CI/CD']
+    # completed = success/failure/cancelled नंतर event येईल
+    types: [completed]
+  # Manual run साठी (GitHub Actions -> Run workflow)
+  workflow_dispatch:
+
+# Workflow मधले jobs
+jobs:
+  # k6 smoke load test job
+  k6-smoke-test:
+    # 1) manual trigger असेल तर नेहमी चालवा
+    # 2) workflow_run असेल तर फक्त deploy success असेल तेव्हाच चालवा
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    # Job कोणत्या runner वर चालेल
+    runs-on: ubuntu-latest
+
+    # Job मधले steps
+    steps:
+      # Repository code runner machine वर checkout करा
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Docker image वापरून k6 test run करा
+      - name: Run k6 smoke test against production URL
+        env:
+          # Target production URL (k6 script मध्ये __ENV.BASE_URL म्हणून वापरतो)
+          BASE_URL: https://proud-pebble-067e3a310.4.azurestaticapps.net
+        run: |
+          # --rm : container काम झाल्यावर delete करा
+          # -e   : BASE_URL env container मध्ये pass करा
+          # -v   : repo folder container मध्ये mount करा
+          # -w   : working directory /work set करा
+          # grafana/k6 : official k6 docker image
+          # run load-tests/smoke.js : आपल्या script वर test execute करा
+          docker run --rm \
+            -e BASE_URL="$BASE_URL" \
+            -v "${{ github.workspace }}:/work" \
+            -w /work \
+            grafana/k6 run load-tests/smoke.js

@@ -32,3 +32,50 @@ export default defineConfig([
   },
 ]);
 ```
+
+## Load Testing (k6)
+
+This project now includes basic load-testing configuration for your deployed Azure Static Web App.
+
+### Files added
+
+- `load-tests/smoke.js` → k6 smoke/load test script
+- `.github/workflows/load-test.yml` → GitHub Action that runs after successful Azure deploy
+
+### Run load test manually (local)
+
+Install [k6](https://k6.io/docs/get-started/installation/) and run:
+
+```bash
+k6 run load-tests/smoke.js
+```
+
+Or test any URL:
+
+```bash
+BASE_URL=https://your-site-url k6 run load-tests/smoke.js
+```
+
+### Run via npm script
+
+```bash
+npm run load:test
+```
+
+### Automatic post-deploy test in GitHub Actions
+
+After your Azure Static Web Apps workflow succeeds, this workflow runs automatically:
+
+- Workflow name: **Post Deploy Load Test (k6)**
+- Trigger: `workflow_run` of **Azure Static Web Apps CI/CD**
+
+It runs the k6 script against:
+
+`https://proud-pebble-067e3a310.4.azurestaticapps.net`
+
+### Current thresholds in `load-tests/smoke.js`
+
+- `http_req_failed < 1%`
+- `p95 response time < 800ms`
+
+You can tighten/relax these limits based on production expectations.
